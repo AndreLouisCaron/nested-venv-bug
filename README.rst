@@ -59,6 +59,29 @@ However, this script fails with this error::
 When we dig a bit deeper, we notice that the ``./bar/bin/activate`` is **not**
 executable and that ``./bar/bin/pip`` is indeed missing.
 
+test-bad.sh
+-----------
+
+This is a variant of ``test.sh`` in which the ``foo`` virtual environment is
+created using the command that Tox issues.
+
+This script fails with the following error::
+
+  OSError: [Errno 13] Permission denied: '/Library/Python/2.7/site-packages/werkzeug'
+
+While this is not the same symptom, it's interesting that the script end up
+trying to install packages in the system Python installation, showing that
+something is very likely not pointing at the right place.
+
+One thing I noticed here is that the ``foo`` environment is created with the
+third-party virtualenv_ package, but the ``bar`` environment is then created
+using the built-in/standard venv_ package provided by Python 3.3+.
+
+The bug may lie in the fact that these implementations are incompatible...
+
+.. _virtualenv: https://pypi.python.org/pypi/virtualenv
+.. _venv: https://docs.python.org/3/library/venv.html
+
 License
 -------
 
